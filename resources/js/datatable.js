@@ -3,8 +3,9 @@
 let next = null;
 let prev = null;
 let selectedSubscriber;
+let responseUrl = '';
 $(() => {
-    const table = $('#test').DataTable({
+    const table = $('#dataTable').DataTable({
         columns: [
             { data: "name", name: "name" },
             { data: "email", name: "email" },
@@ -26,7 +27,7 @@ $(() => {
         ],
         processing: true,
         serverSide: true,
-        pageLength: 5,
+        pageLength: 10,
         pagingType: "simple",
         search: {
             return: true,
@@ -40,6 +41,8 @@ $(() => {
             error: (error) => {
                 let message = JSON.parse(error.responseText);
                 showAlert('failure', message.message ? message.message : 'Something went wrong!');
+                $('#dataTable_processing').hide();
+                table.search('').draw();
             },
             data: function (d) {
                 d.next = next;
@@ -50,11 +53,12 @@ $(() => {
                 prev = data.data.links?.prev ? data.data.links?.prev : null;
                 return data.data.links ? data.data.data : data.data;
             },
-        }
+        },
+        destroy: true
     });
 
     //Update email modal open
-    $('#test tbody').on('click', '.email_update', function () {
+    $('#dataTable tbody').on('click', '.email_update', function () {
         var data = table.row($(this)).data();
         selectedSubscriber = data;
         $('#name').val(data.name);
@@ -64,7 +68,7 @@ $(() => {
     });
 
     //Delete subscriber
-    $('#test tbody').on('click', 'button', function () {
+    $('#dataTable tbody').on('click', 'button', function () {
         const data = table.row($(this).parents('tr')).data();
         $.ajax({
             url: `/api/subscribers/${data.id}`,

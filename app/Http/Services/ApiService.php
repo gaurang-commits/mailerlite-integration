@@ -51,7 +51,7 @@ class ApiService
         $this->client = Http::withHeaders([
             'accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'X-MailerLite-ApiKey' => $this->apiKey
+            'Authorization' => 'Bearer ' . $this->apiKey
         ])->baseUrl(config('services.mailerlite.endpoint'));
     }
 
@@ -122,8 +122,9 @@ class ApiService
                     'status' => 1
                 ])->key;
             } else {
-                throw new Exception('Api ket is invalid, or not available!');
+                throw new Exception('Api key is invalid, or not available!');
             }
+            return true;
         }
     }
 }

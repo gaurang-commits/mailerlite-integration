@@ -24,6 +24,7 @@ class Helper
 
         $response->recordsTotal = $response->recordsFiltered = 0;
         $isSubArray = self::containsSubArray((array)$response->data);
+        //searching subscriber
         if (!$isSubArray) {
             $response->recordsTotal = $response->recordsFiltered = 1;
         } else {
@@ -33,7 +34,7 @@ class Helper
             }
         }
 
-        $response->data = self::containsSubArray((array)$response->data) ? $response->data : [$response->data];
+        $response->data = $isSubArray ? $response->data : [$response->data];
         return Response::json($response, $data->status());
     }
 
@@ -46,6 +47,10 @@ class Helper
      */
     public function containsSubArray(array $array)
     {
+        //is array is empty return it as it is
+        if (empty($array)) {
+            return true;
+        }
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 return true;

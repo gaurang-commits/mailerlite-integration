@@ -8,7 +8,6 @@ $(() => {
     });
     $('#addSubscriber').on('submit', (e) => {
         e.preventDefault();
-        console.log();
         $.ajax({
             type: 'POST',
             url: '/api/subscribers',
