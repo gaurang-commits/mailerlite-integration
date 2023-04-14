@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Facades\MailerLite;
 use Helper;
-use App\Http\Requests\CreateSubscriber;
-use App\Http\Requests\UpdateSubscriber;
+use App\Http\Requests\API\CreateSubscriber;
+use App\Http\Requests\API\UpdateSubscriber;
 use Exception;
 use Illuminate\Http\Request;
 

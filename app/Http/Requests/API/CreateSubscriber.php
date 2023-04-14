@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class UpdateSubscriber extends FormRequest
+class CreateSubscriber extends FormRequest
 {
+
     /**
      * Indicates whether validation should stop after the first rule failure.
      *
@@ -35,6 +36,7 @@ class UpdateSubscriber extends FormRequest
     {
         return [
             'name' => 'required|string',
+            'email' => 'required|email',
             'country' => 'required|string|' . Rule::in(config('countries'))
         ];
     }
