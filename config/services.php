@@ -31,7 +31,7 @@ return [
     ],
     
     'mailerlite' => [
-        'key' => env('MAILERLITE_API_Key'),
+        'key' => env('MAILERLITE_API_KEY'),
         'endpoint' => env('MAILERLITE_API_ENDPOINT'),
         'validation_endpoint' => env('MAILERLITE_VALIDATION_ENDPOINT')
     ]
