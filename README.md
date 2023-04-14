@@ -8,7 +8,7 @@
 ### Installation
 Clone the repository
 ```bash
-git clone https://github.com/gaurang-commits/mailerlite-integration.git .
+git clone https://github.com/gaurang-commits/mailerlite-integration.git
 ```
 Install all the dependencies using composer
 
@@ -50,7 +50,7 @@ You can now access the server at http://localhost:8000
 
 **TL;DR command list**
 
-    git clone https://github.com/gaurang-commits/mailerlite-integration.git .
+    git clone https://github.com/gaurang-commits/mailerlite-integration.git
     composer install
     cp .env.example .env
     php artisan key:generate
