@@ -50,11 +50,7 @@ You can now access the server at http://localhost:8000
 - `app/HTTP/Services/MailerLiteService` - Contains MailerLite API integration
 - `app/Transformers/SubscriberTransformer` - Contains the required parameters to show on datatable
 - `app/Helpers/Helper` - Contains the helper functions
-- `config` - Contains all the application configuration files
-- `routes` - Contains all the api routes defined in api.php file
-- `tests` - Contains all the application tests
-- `tests/Feature` - Contains all the api tests
-`tests/Dara` - Contains the required API response for faking http requests for testing
+- `tests/Data` - Contains the required API response for faking http requests for testing
 
 ## Environment variables
 - `MAILERLITE_API_Key` - MailerLite API key
