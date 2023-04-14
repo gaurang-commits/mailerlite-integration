@@ -121,6 +121,8 @@ class ApiService
                     'key' => config('services.mailerlite.key'),
                     'status' => 1
                 ])->key;
+            } elseif ($response->status() == 429) {
+                throw new Exception('Api limit reached, please try after sometime!');
             } else {
                 throw new Exception('Api key is invalid, or not available!');
             }

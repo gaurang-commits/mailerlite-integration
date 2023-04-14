@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
+use SebastianBergmann\Type\TrueType;
 use Tests\TestCase;
 
 class SubscriberTest extends TestCase
@@ -50,16 +51,17 @@ class SubscriberTest extends TestCase
     /** @test */
     public function it_gets_all_subscribers()
     {
+        $this->fakeApiValidation();
         //Faking the requests to prevent multiple API calls
         Http::fake([
             //Faking the count API
-            'https://connect.mailerlite.com/api/subscribers?limit=0' =>
+            config('services.mailerlite.endpoint') . 'subscribers?limit=0' =>
             Http::response('{
                 "total": 100
             }
             ', 200),
             //Faking the subscribers list api
-            'https://connect.mailerlite.com/api/subscribers' =>
+            config('services.mailerlite.endpoint') . '/subscribers' =>
             Http::response($this->subscriberListResponse, 200)
         ]);
 
@@ -84,9 +86,10 @@ class SubscriberTest extends TestCase
     /** @test */
     public function it_throws_an_error_for_invalid_api_key()
     {
+        $this->fakeApiValidation();
         Http::fake([
             //Faking Unauthenticated response
-            'https://connect.mailerlite.com/api/*' =>
+            config('services.mailerlite.endpoint') . '*' =>
             Http::response('{
                 "message": "Unauthenticated."
               }', 401)
@@ -113,9 +116,10 @@ class SubscriberTest extends TestCase
      */
     public function it_finds_a_subscriber($subscriber)
     {
+        $this->fakeApiValidation();
         Http::fake([
             //Faking find subscriber response
-            'https://connect.mailerlite.com/api/subscribers' =>
+            config('services.mailerlite.endpoint') . 'subscribers' =>
             Http::response($this->subscriberResponse, 200),
         ]);
 
@@ -142,9 +146,10 @@ class SubscriberTest extends TestCase
      */
     public function it_throws_error_when_subscriber_does_not_exists()
     {
+        $this->fakeApiValidation();
         Http::fake([
             //Faking subscriber does not exist response
-            'https://connect.mailerlite.com/api/subscribers' =>
+            config('services.mailerlite.endpoint') . 'subscribers' =>
             Http::response('{
                 "message": "Resource not found."
             }', 404),
@@ -172,9 +177,10 @@ class SubscriberTest extends TestCase
      */
     public function it_creates_a_subscriber()
     {
+        $this->fakeApiValidation();
         Http::fake([
             //Faking create subscriber response
-            'https://connect.mailerlite.com/api/subscribers' =>
+            config('services.mailerlite.endpoint') . 'subscribers' =>
             Http::response($this->subscriberResponse, 200),
         ]);
 
@@ -186,7 +192,6 @@ class SubscriberTest extends TestCase
         ];
         //Executing the api
         $response = $this->json('POST', '/api/subscribers', $request);
-
         //Assertions
         $response->assertOk();
         $response->assertJsonFragment([
@@ -201,9 +206,10 @@ class SubscriberTest extends TestCase
      */
     public function it_throws_error_when_creating_user_with_same_email($existingUser)
     {
+        $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            "https://connect.mailerlite.com/api/subscribers/{$existingUser['email']}" =>
+            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
             Http::response($this->subscriberResponse, 200),
         ]);
 
@@ -221,6 +227,134 @@ class SubscriberTest extends TestCase
         $response->assertStatus(400);
         $response->assertJsonFragment([
             'isSuccess' => false
+        ]);
+    }
+
+    /** 
+     * @test
+     * 
+     * @depends it_creates_a_subscriber
+     */
+    public function it_updated_a_subscriber($existingUser)
+    {
+        $this->fakeApiValidation();
+        Http::fake([
+            //Faking user exists response
+            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            Http::response($this->subscriberResponse, 200),
+        ]);
+        $request = [
+            'name' => 'test',
+            'country' => 'India'
+        ];
+        //Executing the api
+        $response = $this->json('PUT', '/api/subscribers/' . $existingUser['email'], $request);
+
+        //Assertions
+        $response->assertOk();
+        $response->assertJsonFragment([
+            'isSuccess' => true
+        ]);
+    }
+
+    /** 
+     * @test
+     * 
+     * @depends it_creates_a_subscriber
+     */
+    public function it_throws_error_on_invalid_updated_request($existingUser)
+    {
+        $this->fakeApiValidation();
+        Http::fake([
+            //Faking user exists response
+            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            Http::response($this->subscriberResponse, 200),
+        ]);
+        $request = [
+            'country' => 'India'
+        ];
+        //Executing the api
+        $response = $this->json('PUT', '/api/subscribers/' . $existingUser['email'], $request);
+
+        //Assertions
+        $response->assertStatus(422);
+    }
+
+    /** 
+     * @test
+     * 
+     * @depends it_creates_a_subscriber
+     */
+    public function it_throws_error_on_invalid_country_on_update_request($existingUser)
+    {
+        $this->fakeApiValidation();
+        Http::fake([
+            //Faking user exists response
+            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            Http::response($this->subscriberResponse, 200),
+        ]);
+        $request = [
+            'name' => 'test',
+            'country' => 'test'
+        ];
+        //Executing the api
+        $response = $this->json('PUT', '/api/subscribers/' . $existingUser['email'], $request);
+
+        //Assertions
+        $response->assertStatus(422);
+    }
+
+    /** 
+     * @test
+     * 
+     * @depends it_creates_a_subscriber
+     */
+    public function it_deletes_a_subscriber($existingUser)
+    {
+        $this->fakeApiValidation();
+        Http::fake([
+            //Faking user exists response
+            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['id']}" =>
+            Http::response([], 204),
+        ]);
+
+        //Executing the api
+        $response = $this->json('DELETE', '/api/subscribers/' . $existingUser['id']);
+
+        //Assertions
+        $response->assertStatus(204);
+    }
+
+    /** 
+     * @test
+     * 
+     */
+    public function it_throws_error_while_deleting_invalid_subscriber()
+    {
+        $this->fakeApiValidation();
+        Http::fake([
+            //Faking user exists response
+            config('services.mailerlite.endpoint') . "subscribers/1" =>
+            Http::response([], 404),
+        ]);
+
+        //Executing the api
+        $response = $this->json('DELETE', '/api/subscribers/1');
+
+        //Assertions
+        $response->assertStatus(404);
+    }
+
+    /** 
+     * Fake APIKey Validation
+     *
+     */
+    protected function fakeApiValidation()
+    {
+        Http::fake([
+            //Faking user exists response
+            config('services.mailerlite.validation_endpoint') =>
+            Http::response([], 200),
         ]);
     }
 }
