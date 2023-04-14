@@ -55,7 +55,7 @@ class SubscriberTest extends TestCase
         //Faking the requests to prevent multiple API calls
         Http::fake([
             //Faking the subscribers list api
-            config('services.mailerlite.endpoint') . 'subscribers*' =>
+            config('services.mailerlite.endpoint') . '/subscribers*' =>
             Http::response($this->subscriberListResponse, 200)
         ]);
 
@@ -83,7 +83,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking Unauthenticated response
-            config('services.mailerlite.endpoint') . '*' =>
+            config('services.mailerlite.endpoint') . '/*' =>
             Http::response('{
                 "message": "Unauthenticated."
               }', 401)
@@ -122,7 +122,7 @@ class SubscriberTest extends TestCase
 
         Http::fake([
             //Faking find subscriber response
-            config('services.mailerlite.endpoint') . "subscribers/{$request['search']['value']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$request['search']['value']}" =>
             Http::response($this->subscriberResponse, 200),
         ]);
 
@@ -154,7 +154,7 @@ class SubscriberTest extends TestCase
 
         Http::fake([
             //Faking subscriber does not exist response
-            config('services.mailerlite.endpoint') . "subscribers/{$request['search']['value']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$request['search']['value']}" =>
             Http::response('{
                 "message": "Resource not found."
             }', 404),
@@ -178,7 +178,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking create subscriber response
-            config('services.mailerlite.endpoint') . 'subscribers' =>
+            config('services.mailerlite.endpoint') . '/subscribers' =>
             Http::response($this->subscriberResponse, 200),
         ]);
 
@@ -191,7 +191,7 @@ class SubscriberTest extends TestCase
 
         Http::fake([
             //Faking find subscriber response
-            config('services.mailerlite.endpoint') . "subscribers/{$request['email']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$request['email']}" =>
             Http::response([], 404),
         ]);
 
@@ -215,7 +215,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$existingUser['email']}" =>
             Http::response($this->subscriberResponse, 200),
         ]);
 
@@ -246,7 +246,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$existingUser['email']}" =>
             Http::response($this->subscriberResponse, 200),
         ]);
         $request = [
@@ -273,7 +273,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$existingUser['email']}" =>
             Http::response($this->subscriberResponse, 200),
         ]);
         $request = [
@@ -296,7 +296,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['email']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$existingUser['email']}" =>
             Http::response($this->subscriberResponse, 200),
         ]);
         $request = [
@@ -320,7 +320,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            config('services.mailerlite.endpoint') . "subscribers/{$existingUser['id']}" =>
+            config('services.mailerlite.endpoint') . "/subscribers/{$existingUser['id']}" =>
             Http::response([], 204),
         ]);
 
@@ -340,7 +340,7 @@ class SubscriberTest extends TestCase
         $this->fakeApiValidation();
         Http::fake([
             //Faking user exists response
-            config('services.mailerlite.endpoint') . "subscribers/1" =>
+            config('services.mailerlite.endpoint') . "/subscribers/1" =>
             Http::response([], 404),
         ]);
 
@@ -364,7 +364,7 @@ class SubscriberTest extends TestCase
             Http::response([], 200),
 
             //Faking the count API
-            config('services.mailerlite.endpoint') . 'subscribers?limit=0' =>
+            config('services.mailerlite.endpoint') . '/subscribers?limit=0' =>
             Http::response('{
                 "total": 100
             }
