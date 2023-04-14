@@ -3,7 +3,7 @@
         <div class="d-flex mt-2 mb-2">
             <a href="{{route('subscribers.create')}}" class="btn btn-secondary">Add subscriber</a>
         </div>
-        <table class="table" id="test">
+        <table class="table" id="dataTable">
             <thead>
                 <tr>
                     <th scope="col">Name</th>

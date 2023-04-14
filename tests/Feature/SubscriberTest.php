@@ -35,8 +35,6 @@ class SubscriberTest extends TestCase
         $this->subscriberResponse = file_get_contents(base_path('tests/Data/CreateSubscriberSuccess.json'));
         //Fetch mocked response json
         $this->subscriberListResponse = file_get_contents(base_path('tests/Data/SubscribersSuccess.json'));
-        //Migration for sqlite in-memory db
-        Artisan::call('migrate');
     }
 
     /**

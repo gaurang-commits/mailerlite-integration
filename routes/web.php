@@ -14,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function() {
+    return redirect()->route('subscribers.index');
+});
 // Routes for prefix /subscribers
 Route::resource('subscribers',  SubscriberController::class);

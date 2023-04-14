@@ -42,7 +42,6 @@ $(() => {
                 let message = JSON.parse(error.responseText);
                 showAlert('failure', message.message ? message.message : 'Something went wrong!');
                 $('#dataTable_processing').hide();
-                table.search('').draw();
             },
             data: function (d) {
                 d.next = next;
@@ -53,8 +52,7 @@ $(() => {
                 prev = data.data.links?.prev ? data.data.links?.prev : null;
                 return data.data.links ? data.data.data : data.data;
             },
-        },
-        destroy: true
+        }
     });
 
     //Update email modal open
@@ -78,6 +76,7 @@ $(() => {
             },
             success: function (data) {
                 showAlert('success', 'Subscriber deleted successfully');
+                table.search('');
                 table.ajax.reload();
 
             },
